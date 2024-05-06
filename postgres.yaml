@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-postgres
+  namespace: perf-test
+spec:
+  selector:
+    matchLabels:
+      app: flask-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: flask-postgres
+    spec:
+      volumes:
+        - name: flask-postgres-data-vol
+          persistentVolumeClaim:
+            claimName: flask-postgres-data-pvc
+        - name: flask-postgres-ready-sh
+          configMap:
+            name: flask-postgres-ready-sh
+      containers:
+        - name: flask-postgres
+          image: postgres:16.2
+          ports:
+            - containerPort: 5432
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: 50m
+            requests:
+              memory: 512Mi
+              cpu: 50m
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: flask-postgres-config
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: flask-postgres-config
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: flask-postgres
+                  key: flask-postgres
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            failureThreshold: 1
+            periodSeconds: 10
+            timeoutSeconds: 3
+          startupProbe:
+            exec:
+              command:
+                - /bin/bash
+                - /root/ready.sh
+            failureThreshold: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: flask-postgres-data-vol
+              mountPath: /var/lib/postgresql/data
+            - name: flask-postgres-ready-sh
+              mountPath: /root
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: flask-postgres-data-pvc
+  namespace: perf-test
+spec:
+  storageClassName: flask-postgres
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: flask-postgres
+  namespace: perf-tests
+  labels:
+    type: local
+spec:
+  storageClassName: flask-postgres
+  capacity:
+    storage: 20Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/k0s/flask-postgres-data"

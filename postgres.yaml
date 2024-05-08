@@ -21,10 +21,6 @@ spec:
         - name: flask-postgres-ready-sh
           configMap:
             name: flask-postgres-ready-sh
-        - name: load-sql-local-vol
-          hostPath:
-            path: ./sql
-            type: DirectoryOrCreate
       containers:
         - name: flask-postgres
           image: postgres:16.2
@@ -73,8 +69,6 @@ spec:
               mountPath: /var/lib/postgresql/data
             - name: flask-postgres-ready-sh
               mountPath: /root
-            - name: load-sql-local-vol
-              mountPath: /docker-entrypoint-initdb.d
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

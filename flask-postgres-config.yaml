@@ -4,7 +4,7 @@ metadata:
   name: flask-postgres-config
   namespace: perf-test
 data:
-  DB_HOST: "flask-postgres-service"
+  DB_HOST: "flask-postgres"
   DB_PORT: "5432"
   DB_USER: "flaskpg"
   DB_TYPE: "postgres"

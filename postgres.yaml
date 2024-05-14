@@ -18,9 +18,27 @@ spec:
         - name: flask-postgres-data-vol
           persistentVolumeClaim:
             claimName: flask-postgres-data-pvc
+        - name: load-sql-vol
+          persistentVolumeClaim:
+            claimName: load-sql-pvc
         - name: flask-postgres-ready-sh
           configMap:
             name: flask-postgres-ready-sh
+        - name: flask-postgres-sqls
+          configMap:
+            name: flask-postgres-sqls
+      initContainers:
+        - name: setup-sql
+          image: alpine/curl:8.5.0
+          command:
+            - sh
+            - -c
+            - cd /sql && /init-sql/download-sqls.sh
+          volumeMounts:
+            - name: flask-postgres-sqls
+              mountPath: /init-sql
+            - name: load-sql-vol
+              mountPath: /sql
       containers:
         - name: flask-postgres
           image: postgres:16.2
@@ -69,6 +87,8 @@ spec:
               mountPath: /var/lib/postgresql/data
             - name: flask-postgres-ready-sh
               mountPath: /root
+            - name: load-sql-vol
+              mountPath: /sql
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -98,3 +118,30 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/opt/k0s/flask-postgres-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: load-sql-pvc
+spec:
+  storageClassName: load-sql
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Mi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: load-sql
+  labels:
+    type: local
+spec:
+  storageClassName: load-sql
+  capacity:
+    storage: 2Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/opt/k0s/perf-test-sqls"

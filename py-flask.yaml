@@ -37,7 +37,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: flask-postgres
-                  key: DB_PASSWORD
+                  key: flask-postgres
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:

@@ -80,7 +80,7 @@ spec:
               command:
                 - /bin/bash
                 - /root/ready.sh
-            failureThreshold: 10
+            failureThreshold: 50
             periodSeconds: 10
           volumeMounts:
             - name: flask-postgres-data-vol
@@ -88,7 +88,7 @@ spec:
             - name: flask-postgres-ready-sh
               mountPath: /root
             - name: load-sql-vol
-              mountPath: /sql
+              mountPath: /docker-entrypoint-initdb.d
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -19,8 +19,7 @@ spec:
           persistentVolumeClaim:
             claimName: flask-postgres-data-pvc
         - name: load-sql-vol
-          persistentVolumeClaim:
-            claimName: load-sql-pvc
+          emptyDir: {}
         - name: flask-postgres-ready-sh
           configMap:
             name: flask-postgres-ready-sh
@@ -118,30 +117,3 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: "/opt/k0s/flask-postgres-data"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: load-sql-pvc
-spec:
-  storageClassName: load-sql
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Mi
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: load-sql
-  labels:
-    type: local
-spec:
-  storageClassName: load-sql
-  capacity:
-    storage: 2Mi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/opt/k0s/perf-test-sqls"

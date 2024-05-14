@@ -33,7 +33,7 @@ spec:
           command:
             - sh
             - -c
-            - cd /sql && /init-sql/download-sqls.sh
+            - cd /sql && sh /init-sql/download-sqls.sh
           volumeMounts:
             - name: flask-postgres-sqls
               mountPath: /init-sql

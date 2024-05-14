@@ -6,6 +6,9 @@ configMapGenerator:
   - name: flask-postgres-ready-sh
     files:
       - ./scripts/ready.sh
+  - name: flask-postgres-sqls
+    files:
+      - ./scripts/download-sqls.sh
 resources:
   - ns.yaml
   - postgres-password.yaml

@@ -6,6 +6,9 @@ configMapGenerator:
   - name: flask-postgres-ready-sh
     files:
       - ./scripts/ready.sh
+  - name: flask-postgres-create-tables
+    files:
+      - ./sql/01-create-tables.sql
   - name: flask-postgres-sqls
     files:
       - ./scripts/gen_sql_data.sh

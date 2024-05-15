@@ -23,17 +23,23 @@ spec:
         - name: flask-postgres-ready-sh
           configMap:
             name: flask-postgres-ready-sh
+        - name: flask-postgres-create-tables
+          configMap:
+            name: flask-postgres-create-tables
         - name: flask-postgres-sqls
           configMap:
             name: flask-postgres-sqls
       initContainers:
         - name: setup-sql
           image: alpine:latest
+          workingDir: /sql
           command:
             - sh
             - -c
-            - cd /sql && sh /init-sql/gen_sql_data.sh
+            - cp /create-sql/01-create-tables.sql . && sh /init-sql/gen_sql_data.sh
           volumeMounts:
+            - name: flask-postgres-create-tables
+              mountPath: /create-sql
             - name: flask-postgres-sqls
               mountPath: /init-sql
             - name: load-sql-vol

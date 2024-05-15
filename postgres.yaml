@@ -28,11 +28,11 @@ spec:
             name: flask-postgres-sqls
       initContainers:
         - name: setup-sql
-          image: alpine/curl:8.5.0
+          image: alpine:latest
           command:
             - sh
             - -c
-            - cd /sql && sh /init-sql/download-sqls.sh
+            - cd /sql && sh /init-sql/gen_sql_data.sh
           volumeMounts:
             - name: flask-postgres-sqls
               mountPath: /init-sql

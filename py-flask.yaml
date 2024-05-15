@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: py-flask
-          image: public.ecr.aws/i7p4t6o8/streamlit-dashboard:1.12
+          image: public.ecr.aws/i7p4t6o8/streamlit-dashboard:1.13
           ports:
             - name: py-flask-port
               containerPort: 5000

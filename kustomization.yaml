@@ -15,6 +15,6 @@ configMapGenerator:
 resources:
   - ns.yaml
   - postgres-password.yaml
-  - postgres.yaml
   - flask-postgres-config.yaml
+  - postgres.yaml
   - py-flask.yaml

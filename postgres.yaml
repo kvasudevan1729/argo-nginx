@@ -36,7 +36,7 @@ spec:
           command:
             - sh
             - -c
-            - cp /create-sql/01-create-tables.sql . && sh /init-sql/gen_sql_data.sh
+            - apk update && apk add bash && cp /create-sql/01-create-tables.sql . && bash /init-sql/gen_sql_data.sh
           volumeMounts:
             - name: flask-postgres-create-tables
               mountPath: /create-sql
@@ -79,14 +79,17 @@ spec:
               port: 5432
             failureThreshold: 1
             periodSeconds: 10
-            timeoutSeconds: 3
+            timeoutSeconds: 5
+            initialDelaySeconds: 300
           startupProbe:
             exec:
               command:
                 - /bin/bash
                 - /root/ready.sh
-            failureThreshold: 50
+            failureThreshold: 10
             periodSeconds: 10
+            timeoutSeconds: 5
+            initialDelaySeconds: 300
           volumeMounts:
             - name: flask-postgres-data-vol
               mountPath: /var/lib/postgresql/data

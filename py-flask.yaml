@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: py-flask
-          image: public.ecr.aws/i7p4t6o8/py-flask-perf:1.0
+          image: public.ecr.aws/i7p4t6o8/py-flask-perf:1.0.1
           ports:
             - name: py-flask-port
               containerPort: 5000
@@ -48,6 +48,20 @@ spec:
                 configMapKeyRef:
                   name: flask-postgres-config
                   key: DB_HOST
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 20
+            timeoutSeconds: 5
+            initialDelaySeconds: 140
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            periodSeconds: 20
+            timeoutSeconds: 5
+            initialDelaySeconds: 140
 ---
 apiVersion: v1
 kind: Service

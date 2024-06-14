@@ -11,8 +11,9 @@ emp_skills_sql="./08-employee-skills-data.sql"
 departments=""
 
 echo "=> generating sql for department table ..."
+dept_cnt=30
 echo "INSERT INTO department (name, school) VALUES" > ${dept_sql}
-for i in $(seq 1 20); do
+for i in $(seq 1 ${dept_cnt}); do
     dept=$(tr -dc 'A-Z' < /dev/urandom | head -c8)
     school=$(tr -dc 'A-Z' < /dev/urandom | head -c4)
     departments="${departments} ${dept}"
@@ -25,7 +26,7 @@ departments="${departments} ${dept}"
 echo "  ('${dept}', '${school}');" >> ${dept_sql}
 
 #### SKILL_LEVEL
-skill_level_cnt=10
+skill_level_cnt=20
 skill_levels=()
 echo "=> generating sql for skill_level table ..."
 echo "INSERT INTO skill_level (level_name, description) VALUES" > ${skill_level_sql}
@@ -68,7 +69,7 @@ echo "INSERT INTO employee_room (room_name, employee_id) VALUES" > ${emp_room_sq
 echo "INSERT INTO desktop (name, employee_id, desktop_type) VALUES" > ${desktop_sql}
 echo "INSERT INTO employee_skills (employee_id, skill_name, skill_level) VALUES" > ${emp_skills_sql}
 
-no_recs_per_dept=1000
+no_recs_per_dept=2000
 for d in ${departments}; do
   echo -e "\n=> department: ${d}"
     for i in $(seq 1 ${no_recs_per_dept}); do

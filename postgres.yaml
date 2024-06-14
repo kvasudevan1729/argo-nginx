@@ -30,7 +30,7 @@ spec:
           configMap:
             name: flask-postgres-sqls
       nodeSelector:
-        kubernetes.io/hostname=grammatix: grammatix
+        kubernetes.io/hostname: grammatix
       initContainers:
         - name: setup-sql
           image: alpine:latest

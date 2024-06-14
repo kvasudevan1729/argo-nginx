@@ -14,9 +14,6 @@ spec:
       labels:
         app: flask-postgres
     spec:
-      nodeSelector:
-        kubernetes:
-          io/hostname=grammatix: grammatix
       volumes:
         - name: flask-postgres-data-vol
           persistentVolumeClaim:
